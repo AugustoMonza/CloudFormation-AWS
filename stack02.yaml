@@ -1,0 +1,95 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: >
+  #Proyecto guiado por
+  #youtuber: MicroMicah
+  #VPC and EC2.
+
+Resources:
+  MyVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Augusto
+          Value: AugustoMonza
+  
+  InternetGateWay:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Augusto
+          Value: AugustoMonza
+  
+  InternetGateWayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref MyVpc
+      InternetGatewayId: !Ref InternetGateWay
+  
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.1.0/24
+      VpcId: !Ref MyVpc
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Augusto
+          Value: AugustoMonza Public Subnet
+
+  PrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVpc
+      CidrBlock: 10.0.11.0/24
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Augusto
+          Value: AugustoMonza Private Subnet
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MyVpc
+      Tags:
+        - Key: Augusto
+          Value: AugustoMonza RouteTable Project
+  
+  Route:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGateWayAttachment
+    Properties:
+      RouteTableId: !Ref RouteTable 
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateWay
+  
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref PublicSubnet
+  
+  WebServerSegurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP from 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      VpcId: !Ref MyVpc
+  
+  Ec2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      SubnetId: !Ref MyFirstSubNetPublic
+      ImageId: "ami-01fc9174dd9330556"
+      InstanceType: t2.micro
+      SecurityGroupIds:
+        - !Ref WebServerSegurityGroup
+      Tags:
+        - Key: Augusto
+          Value: AugustoMonza Unica Instancia
