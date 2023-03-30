@@ -1,8 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 
 Description: >
-  #Proyecto guiado por
-  #youtuber: MicroMicah
   #VPC and EC2.
 
 Resources:
