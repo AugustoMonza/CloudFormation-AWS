@@ -202,7 +202,12 @@ Resources:
       GatewayId:
         Ref: InternetGateway
   
-  #MainRoute
+  MainRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: MainRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
 
   PublicSubnet1RouteAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -210,7 +215,7 @@ Resources:
       RouteTableId:
         Ref: PublicRouteTable
       SubnetId:
-        Ref: PrivateSubnet1
+        Ref: PublicSubnet1
   
   PublicSubnet2RouteAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -218,8 +223,40 @@ Resources:
       RouteTableId:
         Ref: PublicRouteTable
       SubnetId:
-        Ref: PrivateSubnet2
+        Ref: PublicSubnet2
+  
+  PrivateSubnet1Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId:
+        Ref: MainRouteTable
+      SubnetId:
+        Ref: PrivateSubnet1
 
+  PrivateSubnet2Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId:
+        Ref: MainRouteTable
+      SubnetId:
+        Ref: PrivateSubnet2
+  
+  PrivateSubnet3Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId:
+        Ref: MainRouteTable
+      SubnetId:
+        Ref: PrivateSubnet3
+  
+  PrivateSubnet4Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId:
+        Ref: MainRouteTable
+      SubnetId:
+        Ref: PrivateSubnet4
+        
     
   
 #Outputs:
